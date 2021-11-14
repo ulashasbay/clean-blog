@@ -1,16 +1,29 @@
 const express = require('express');
+const ejs = require('ejs');
 
 const app = express();
 
+// Middleware
+app.use(express.static('public'));
+
+// Temlate Engine 
+app.set('view engine', 'ejs');
+
+// Route
 app.get('/', (req, res) => {
+    res.render('index');  
+});
 
-    const blog = { 
-        id: 1,
-        title: "Blog title",
-        description: "Blog description" 
-    };
+app.get('/about', (req, res) => {
+    res.render('about');  
+});
 
-    res.send(blog);
+app.get('/add_post', (req, res) => {
+    res.render('add_post');  
+});
+
+app.get('/post', (req, res) => {
+    res.render('post');  
 });
 
 
