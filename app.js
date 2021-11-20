@@ -1,17 +1,27 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const ejs = require('ejs');
+const Post = require('./models/Post');
 
 const app = express();
 
+// Connect DB
+mongoose.connect('mongodb://localhost/cleanblog-test-db');
+
 // Middleware
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Temlate Engine 
 app.set('view engine', 'ejs');
 
-// Route
-app.get('/', (req, res) => {
-    res.render('index');  
+// Routes
+app.get('/', async (req, res) => {
+    const posts = await Post.find({});
+    res.render('index', {
+        posts
+    });  
 });
 
 app.get('/about', (req, res) => {
@@ -24,6 +34,11 @@ app.get('/add_post', (req, res) => {
 
 app.get('/post', (req, res) => {
     res.render('post');  
+});
+
+app.post('/posts', async (req, res) =>{
+    await Post.create(req.body);
+    res.redirect('/');
 });
 
 
