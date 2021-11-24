@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const ejs = require('ejs');
 const Post = require('./models/Post');
+const postController = require('./controllers/postController');
+const pageController = require('./controllers/pageController');
 
 const app = express();
 
@@ -21,60 +23,19 @@ app.use(methodOverride('_method', {
 app.set('view engine', 'ejs');
 
 // Routes
-app.get('/', async (req, res) => {
-    const posts = await Post.find({}).sort('-dateCreated');
-    res.render('index', {
-        posts
-    });  
-});
-
-// Single post pages
-app.get('/posts/:id', async (req, res) => {
-    const post = await Post.findById(req.params.id);
-    res.render('post', {
-        post
-    });  
-});
-
-app.get('/about', (req, res) => {
-    res.render('about');  
-});
-
-app.get('/add_post', (req, res) => {
-    res.render('add_post');  
-});
-
-app.get('/post', (req, res) => {
-    res.render('post');  
-});
-
-app.post('/posts', async (req, res) =>{
-    await Post.create(req.body);
-    res.redirect('/');
-});
-
-app.get('/posts/edit/:id', async (req, res) => {
-    const post = await Post.findOne({ _id: req.params.id });
-    res.render('edit', {
-        post
-    });
-});
-
+app.get('/', postController.getAllPosts);
+// Post pages
+app.get('/posts/:id', postController.getPost);
+app.post('/posts', postController.createPost);
 // Update 
-app.put('/posts/:id', async (req, res) => {
-    const post = await Post.findOne({ _id: req.params.id });
-    post.title = req.body.title;
-    post.detail  = req.body.detail;
-    post.save();
-
-    res.redirect(`/posts/${req.params.id}`);
-});
-
+app.put('/posts/:id', postController.updatePost);
 // Delete
-app.delete('/posts/:id', async (req, res) => {
-    await Post.findByIdAndDelete(req.params.id);
-    res.redirect('/');
-});
+app.delete('/posts/:id', postController.deletePost);
+
+app.get('/about', pageController.getAboutPage);
+app.get('/add_post', pageController.getAddPostPage);
+app.get('/post', pageController.getPostPage);
+app.get('/posts/edit/:id', pageController.getEditPage);
 
 
 const port = 3000;
