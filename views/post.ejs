@@ -30,10 +30,10 @@
           <a href="#">
             <img class="img-fluid" src="/img/post-sample-image.jpg" alt="">
           </a>
-          
-          <p>Placeholder text by
-            <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by
-            <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+          <div class="mx-auto text-center my-5">
+            <a class="btn btn-primary" href="/posts/edit/<%= post._id %>" role="button">Update</a>
+            <a class="btn btn-danger" href="/posts/<%= post._id %>?_method=DELETE" role="button" onclick="return confirm('ARE YOU SURE?')">Delete</a>
+          </div>
         </div>
       </div>
     </div>
